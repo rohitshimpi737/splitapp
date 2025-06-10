@@ -2,8 +2,6 @@
 
 SplitApp is a Spring Boot-based expense splitting application that allows users to create groups, add expenses, split bills, and settle balances easily.
 
-**🚀 [Live Application](https://split-app-production-5538.up.railway.app)**
-
 ## Features
 
 - **User Authentication (JWT-based):**
