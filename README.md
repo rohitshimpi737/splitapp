@@ -2,22 +2,6 @@
 
 SplitApp is a Spring Boot-based expense splitting application that allows users to create groups, add expenses, split bills, and settle balances easily.
 
-## Database Information
-
-- **Database:** PostgreSQL
-- **Default Port:** 5432
-- **Recommended Version:** 12 or above
-- **Sample connection properties:**
-  ```
-  spring.datasource.url=jdbc:postgresql://<host>:5432/<database>
-  spring.datasource.username=<your_db_username>
-  spring.datasource.password=<your_db_password>
-  spring.datasource.driver-class-name=org.postgresql.Driver
-  spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-  ```
-- You can use a local PostgreSQL instance or a managed service (Railway, Render, AWS RDS, etc.).
-- **Important:** Never commit your real credentials to version control.
-
 ## Features
 
 - **User Authentication (JWT-based):**
@@ -48,6 +32,22 @@ SplitApp is a Spring Boot-based expense splitting application that allows users 
   - Stores all user, group, expense, and settlement data in a reliable relational database.
   - Supports both local and cloud-hosted PostgreSQL instances.
 
+## Database Information
+
+- **Database:** PostgreSQL
+- **Default Port:** 5432
+- **Recommended Version:** 12 or above
+- **Sample connection properties:**
+  ```
+  spring.datasource.url=jdbc:postgresql://<host>:5432/<database>
+  spring.datasource.username=<your_db_username>
+  spring.datasource.password=<your_db_password>
+  spring.datasource.driver-class-name=org.postgresql.Driver
+  spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+  ```
+- You can use a local PostgreSQL instance or a managed service (Railway, Render, AWS RDS, etc.).
+- **Important:** Never commit your real credentials to version control.
+
 ## Setup Instructions
 
 1. Clone the repository:
@@ -72,9 +72,270 @@ SplitApp is a Spring Boot-based expense splitting application that allows users 
 
 ## API Usage
 
-- Import the provided Postman collection for easy API testing.
-- Use the `/api/v1/auth/login` endpoint to obtain a JWT token.
-- Use the token in the `Authorization` header for all protected endpoints.
+# SplitApp API Documentation
+
+This document describes the available API endpoints for the SplitApp backend.  
+**Base URL:** `https://split-app-production-5538.up.railway.app`
+
+---
+
+## Authentication
+
+### **Register New User**
+- **POST** `/api/v1/user/register`
+- **Body (JSON):**
+  ```json
+  {
+    "username": "Rohit",
+    "email": "Rohit@example.com",
+    "phone": {
+      "countryCode": "+91",
+      "phoneNumber": 7020910075
+    },
+    "password": "password123"
+  }
+  ```
+- **Response:** User registration confirmation.
+
+---
+
+### **Login User**
+- **POST** `/api/v1/auth/login`
+- **Body (JSON):**
+  ```json
+  {
+    "userEmail": "jigar@gmail.com",
+    "password": "12345678"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "accessToken": "<JWT_TOKEN>",
+    "refreshToken": "<REFRESH_TOKEN>"
+  }
+  ```
+- **Note:** Use the `accessToken` for all protected endpoints as a Bearer token.
+
+---
+
+### **Refresh Token**
+- **POST** `/api/v1/auth/refresh_token`
+- **Body (JSON):**
+  ```json
+  {
+    "refreshToken": "<REFRESH_TOKEN>"
+  }
+  ```
+- **Response:** New access token.
+
+---
+
+## User
+
+### **Get User**
+- **GET** `/api/v1/user`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** User details.
+
+### **Update User**
+- **PUT** `/api/v1/user/update`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Body (JSON):**
+  ```json
+  {
+    "username": "satwik",
+    "email": "satwik@gmail.com",
+    "phone": {
+      "countryCode": "+91",
+      "phoneNumber": 9999999999
+    },
+    "password": "fun123"
+  }
+  ```
+- **Response:** Updated user details.
+
+### **Delete User**
+- **DELETE** `/api/v1/user/delete`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Deletion confirmation.
+
+---
+
+## Group
+
+### **Create Group**
+- **POST** `/api/v1/group/create`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Body (JSON):**
+  ```json
+  {
+    "groupName": "Flatmates"
+  }
+  ```
+- **Response:** Group creation confirmation.
+
+### **Add Member to Group**
+- **POST** `/api/v1/group/add-member/{groupId}?memberId={memberId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Member addition confirmation.
+
+### **Update Group**
+- **PUT** `/api/v1/group/update/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Body (JSON):**
+  ```json
+  {
+    "groupName": "hello group"
+  }
+  ```
+- **Response:** Updated group details.
+
+### **Get All Groups of User**
+- **GET** `/api/v1/group`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** List of groups.
+
+### **Get Group Details**
+- **GET** `/api/v1/group/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Group details.
+
+### **Get Members of a Group**
+- **GET** `/api/v1/group/{groupId}/members`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** List of group members.
+
+### **Delete Group**
+- **DELETE** `/api/v1/group/delete?groupId={groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Group deletion confirmation.
+
+### **Delete Member from Group**
+- **DELETE** `/api/v1/group/remove-member/{memberId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Member removal confirmation.
+
+---
+
+## Expenses
+
+### **Create Non-grouped Expense**
+- **POST** `/api/v1/expense/create`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Body (JSON):**
+  ```json
+  {
+    "amount": 123.00,
+    "description": "This is bar type expense"
+  }
+  ```
+- **Response:** Expense creation confirmation.
+
+### **Create Grouped Expense**
+- **POST** `/api/v1/expense/create/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Body (JSON):**
+  ```json
+  {
+    "amount": 1000.00,
+    "description": "Dinner."
+  }
+  ```
+- **Response:** Expense creation confirmation.
+
+### **Add Ower to Expense**
+- **POST** `/api/v1/expense/add-ower/{expenseId}?owerId={owerId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Ower addition confirmation.
+
+### **Get Expense**
+- **GET** `/api/v1/expense/{expenseId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Expense details.
+
+### **Get Expenses of Group**
+- **GET** `/api/v1/expense/group/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** List of expenses for the group.
+
+### **Delete Expense**
+- **DELETE** `/api/v1/expense/delete/{expenseId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Expense deletion confirmation.
+
+### **Remove Payer**
+- **DELETE** `/api/v1/expense/remove-payer/{expenseId}?payerId={payerId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Payer removal confirmation.
+
+---
+
+## Report
+
+### **Get Full Report**
+- **GET** `/api/v1/report/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Group report.
+
+### **Export Report**
+- **GET** `/api/v1/report/{groupId}/export?fileType=XLSX`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** Downloadable report file.
+
+---
+
+## Settlement
+
+### **Calculate Settlement**
+- **GET** `/api/v1/settlement/group/{groupId}`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** List of settlement transactions.
+
+### **Check User Balances**
+- **GET** `/api/v1/settlement/group/{groupId}/balances`
+- **Headers:**  
+  `Authorization: Bearer <accessToken>`
+- **Response:** List of user balances in the group.
+
+---
+
+## **Authentication**
+
+For all protected endpoints, include the following header:
+```
+Authorization: Bearer <accessToken>
+```
+Obtain the `accessToken` by logging in via `/api/v1/auth/login`.
+
+---
+
+## **Postman Collection**
+
+You can import the provided Postman collection file (`SplitApp-API.postman_collection.json`) for ready-to-use requests and testing.
+
+---
 
 ## Contributing
 
