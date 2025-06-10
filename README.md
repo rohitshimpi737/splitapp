@@ -20,12 +20,33 @@ SplitApp is a Spring Boot-based expense splitting application that allows users 
 
 ## Features
 
-- User authentication (JWT-based)
-- Group and expense management
-- Equal expense splitting among group members
-- Settlement calculation and tracking
-- RESTful API endpoints
-- PostgreSQL database integration
+- **User Authentication (JWT-based):**
+  - Secure login and registration endpoints.
+  - Uses JSON Web Tokens for stateless authentication.
+  - Protects sensitive API endpoints so only authenticated users can access them.
+
+- **Group and Expense Management:**
+  - Create and manage groups for splitting expenses.
+  - Add, edit, and delete expenses within groups.
+  - Assign expenses to one or more users in a group.
+
+- **Equal Expense Splitting Among Group Members:**
+  - Automatically calculates each member's share when an expense is added.
+  - Supports adding/removing members from expenses and recalculates shares accordingly.
+  - Ensures the payer can also be included in the split.
+
+- **Settlement Calculation and Tracking:**
+  - Computes how much each user owes or is owed within a group.
+  - Generates a minimal set of transactions to settle up all debts.
+  - Provides endpoints to view balances and record settlements.
+
+- **RESTful API Endpoints:**
+  - Well-structured endpoints for all major operations (users, groups, expenses, settlements).
+  - Follows REST conventions for easy integration with frontend or mobile apps.
+
+- **PostgreSQL Database Integration:**
+  - Stores all user, group, expense, and settlement data in a reliable relational database.
+  - Supports both local and cloud-hosted PostgreSQL instances.
 
 ## Setup Instructions
 
