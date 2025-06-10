@@ -70,6 +70,14 @@ SplitApp is a Spring Boot-based expense splitting application that allows users 
    ```
 6. Access the application at `http://localhost:8080`.
 
+## **Postman Collection**
+
+You can import the provided Postman collection file for ready-to-use requests and testing:
+
+[SplitApp-API.postman_collection.json on GitHub Gist](https://gist.github.com/rohitshimpi737/573c9b6802b8b9ff0d531f9b9d67d332)
+
+---
+
 ## API Usage
 
 # SplitApp API Documentation
@@ -328,14 +336,6 @@ For all protected endpoints, include the following header:
 Authorization: Bearer <accessToken>
 ```
 Obtain the `accessToken` by logging in via `/api/v1/auth/login`.
-
----
-
-## **Postman Collection**
-
-You can import the provided Postman collection file for ready-to-use requests and testing:
-
-[SplitApp-API.postman_collection.json on GitHub Gist](https://gist.github.com/rohitshimpi737/573c9b6802b8b9ff0d531f9b9d67d332)
 
 ---
 
