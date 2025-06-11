@@ -2,6 +2,14 @@
 
 SplitApp is a Spring Boot-based expense splitting application that allows users to create groups, add expenses, split bills, and settle balances easily.
 
+
+## Important Note for Evaluators
+
+This application is deployed on Railway's free tier, which has a RAM limit of **512 MB**. Due to this, the server may occasionally crash or restart if memory usage exceeds this limit.  
+If you encounter any errors or the API is not responding during your evaluation, please email me at **rohit.22210261@viit.ac.in** so I can promptly restart the server.
+
+Thank you for your understanding!
+
 ## Features
 
 - **User Authentication (JWT-based):**
