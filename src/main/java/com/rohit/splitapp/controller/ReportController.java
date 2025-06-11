@@ -1,7 +1,9 @@
 package com.rohit.splitapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,26 @@ public class ReportController {
     }
 
     @GetMapping("/{groupId}/export")
-    public ResponseEntity<String> exportReport(@PathVariable UUID groupId, @RequestParam String fileType) {
-        String response = reportService.exportReport(groupId, fileType);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<byte[]> exportReport(@PathVariable UUID groupId, @RequestParam String fileType) {
+        System.out.println("Export request: groupId=" + groupId + ", fileType=" + fileType);
+        try {
+            byte[] fileBytes = reportService.exportReport(groupId, fileType);
+            System.out.println("File bytes length: " + (fileBytes != null ? fileBytes.length : "null"));
+            String filename = "report." + (fileType.equalsIgnoreCase("XLSX") ? "xlsx" : "csv");
+            MediaType mediaType = fileType.equalsIgnoreCase("XLSX")
+                    ? MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    : MediaType.TEXT_PLAIN;
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                    .contentType(mediaType)
+                    .body(fileBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .body(null);
+        }
     }
+
 }
