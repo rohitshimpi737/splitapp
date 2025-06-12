@@ -91,7 +91,7 @@ You can import the provided Postman collection file for ready-to-use requests an
 # SplitApp API Documentation
 
 This document describes the available API endpoints for the SplitApp backend.  
-**Base URL:** `https://split-app-production-5538.up.railway.app`
+**Base URL:** `https://split-app-v2-production.up.railway.app`
 
 ---
 
